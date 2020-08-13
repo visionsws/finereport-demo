@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.2.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.example.fr</groupId>
+    <artifactId>finereport-demo</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>finereport-demo</name>
+    <description>Demo project for Spring Boot</description>
+
+    <properties>
+        <common-version>10.0-PERSIST-SNAPSHOT</common-version>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>fanruan</id>
+            <name>fanruan</name>
+            <url>http://mvn.finedevelop.com/repository/maven-public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>fanruan</id>
+            <name>fanruan</name>
+            <url>http://mvn.finedevelop.com/repository/maven-public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- core包 -->
+        <dependency>
+            <groupId>com.fr.third</groupId>
+            <artifactId>fine-third</artifactId>
+            <version>${common-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fr.activator</groupId>
+            <artifactId>fine-activator</artifactId>
+            <version>${common-version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fr.core</groupId>
+            <artifactId>fine-core</artifactId>
+            <version>${common-version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fr.webui</groupId>
+            <artifactId>fine-webui</artifactId>
+            <version>${common-version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- 数据源包 -->
+        <dependency>
+            <groupId>com.fr.datasource</groupId>
+            <artifactId>fine-datasource</artifactId>
+            <version>${common-version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- 决策平台包 -->
+        <dependency>
+            <groupId>com.fr.decision</groupId>
+            <artifactId>fine-decision</artifactId>
+            <version>${common-version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fr.decision</groupId>
+            <artifactId>fine-decision-report</artifactId>
+            <version>${common-version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- 定时调度包 -->
+        <dependency>
+            <groupId>com.fr.schedule</groupId>
+            <artifactId>fine-schedule</artifactId>
+            <version>${common-version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fr.schedule</groupId>
+            <artifactId>fine-schedule-report</artifactId>
+            <version>${common-version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- 智能日志包 -->
+        <dependency>
+            <groupId>com.fr.intelligence</groupId>
+            <artifactId>fine-swift</artifactId>
+            <version>${common-version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fr.intelligence</groupId>
+            <artifactId>fine-accumulator</artifactId>
+            <version>${common-version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- 报表引擎包 -->
+        <dependency>
+            <groupId>com.fr.report</groupId>
+            <artifactId>fine-report-engine</artifactId>
+            <version>${common-version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- 设计器包 -->
+        <dependency>
+            <groupId>com.fr.report</groupId>
+            <artifactId>fine-report-designer</artifactId>
+            <version>${common-version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- 远程设计用包 -->
+        <dependency>
+            <groupId>io.socket</groupId>
+            <artifactId>socket.io-client</artifactId>
+            <version>0.7.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- AOP用包 -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.6.9</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.54</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
