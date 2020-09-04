@@ -1,10 +1,12 @@
 package com.fr.data;
 
+import com.fr.base.Parameter;
 import com.fr.json.JSONArray;
 import com.fr.json.JSONObject;
 import com.fr.log.FineLoggerFactory;
 import com.fr.log.FineLoggerProvider;
 import com.fr.stable.ParameterProvider;
+import com.fr.third.alibaba.druid.support.json.JSONUtils;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -19,7 +21,8 @@ import java.util.Iterator;
  *
  * @author fanruan
  */
-public class ZhParamTableDataDemo17 extends AbstractTableData {
+@SuppressWarnings("unchecked")
+public class ParamTableToApiData extends AbstractTableData {
     static FineLoggerProvider logger = FineLoggerFactory.getLogger();
     /**
      * 列名数组，保存程序数据集所有列名
@@ -47,7 +50,7 @@ public class ZhParamTableDataDemo17 extends AbstractTableData {
     /**
      * 构造函数，定义表结构，该表有10个数据列，列名为column#0，column#1，。。。。。。column#9
      */
-    public ZhParamTableDataDemo17() {
+    public ParamTableToApiData() {
 
     }
 
@@ -106,7 +109,8 @@ public class ZhParamTableDataDemo17 extends AbstractTableData {
             ResultSet rs = stmt.executeQuery();
             // 获得记录的详细信息，然后获得总列数
             ResultSetMetaData rsmd = rs.getMetaData();
-            colNum = rsmd.getColumnCount();
+            //这个是col_table表的列数
+            //colNum = rsmd.getColumnCount();
 
 //            columnNames = new String[columnNum];
             ArrayList<String> list = new ArrayList<>();
@@ -116,7 +120,7 @@ public class ZhParamTableDataDemo17 extends AbstractTableData {
                 logger.debug("fileName=" + fileName);
                 list.add(fileName);
             }
-
+            colNum = list.size();
             columnNames = new String[list.size()];
             for (int i = 0; i < list.size(); i++) {
                 columnNames[i] = list.get(i);
@@ -175,15 +179,19 @@ public class ZhParamTableDataDemo17 extends AbstractTableData {
     }
 
 
-    private static String okRequest(String request) {
+    private static JSONArray okRequest(String request) {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody requestBody = RequestBody.create(JSON, request);
 
         Response response = null;
-        String responseStr = null;
+        JSONArray responseStr = null;
         try {
-            response = httpPost("http://127.0.0.1:8903/book/queryFromFR", requestBody);
-            responseStr = new String(response.body().bytes(), "utf-8");
+            response = httpPost("https://dompapi.bluemoon.com.cn/bd-demo/finereport/getData", requestBody);
+            String responseRes = new String(response.body().bytes(), "utf-8");
+            JSONObject resJson = new JSONObject(responseRes);
+            if (resJson.getInt("code") == 200){
+                responseStr = resJson.getJSONArray("content");
+            }
             System.out.println(responseStr);
         } catch (IOException e) {
             e.printStackTrace();
@@ -214,6 +222,10 @@ public class ZhParamTableDataDemo17 extends AbstractTableData {
      * 准备数据
      */
     private void init() {
+        // 确保只被执行一次
+        if (valueList != null) {
+            return;
+        }
         HashMap<String, Object> hashMap = detectParameters();
         JSONObject object = JSONObject.create(hashMap);
 
@@ -221,8 +233,8 @@ public class ZhParamTableDataDemo17 extends AbstractTableData {
         logger.debug("requestParameter=" + requestParameter);
 
         try{
-            String response = okRequest(requestParameter);
-            JSONArray jsonArray = new JSONArray(response);
+            JSONArray jsonArray = okRequest(requestParameter);
+            //JSONArray jsonArray = new JSONArray(response);
 
             valueList = new ArrayList();
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -251,9 +263,9 @@ public class ZhParamTableDataDemo17 extends AbstractTableData {
     public Connection getConnection() {
 
         String driverName = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://bd-test-cdh-243-25:3306/test?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull";
-        String username = "kafka_eagle";
-        String password = "kafka_eagle";
+        String url = "jdbc:mysql://192.168.243.20:9097/demo_test?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull";
+        String username = "root";
+        String password = "b#12345678";
         Connection con;
         try {
             Class.forName(driverName);
@@ -279,7 +291,58 @@ public class ZhParamTableDataDemo17 extends AbstractTableData {
     }
 
     public static void main(String[] args) throws IOException {
-        okRequest("xx");
+        ParamTableToApiData demo = new ParamTableToApiData();
+
+        ParameterProvider parameterProvider = new Parameter();
+        parameterProvider.setName("indexName");
+        parameterProvider.setValue("sap_test");
+        demo.parameters.add(parameterProvider);
+
+        ParameterProvider pp1 = new Parameter();
+        pp1.setName("MATERIAL_ID1");
+        pp1.setValue("10001063");
+        demo.parameters.add(pp1);
+
+        ParameterProvider pp2 = new Parameter();
+        pp2.setName("MATERIAL_ID2");
+        pp2.setValue("");
+        demo.parameters.add(pp2);
+
+        ParameterProvider pp3 = new Parameter();
+        pp3.setName("WERKS1");
+        pp3.setValue("2000");
+        demo.parameters.add(pp3);
+
+        ParameterProvider pp4 = new Parameter();
+        pp4.setName("WERKS2");
+        pp4.setValue("");
+        demo.parameters.add(pp4);
+
+        ParameterProvider pp6 = new Parameter();
+        pp6.setName("INSP_DATE1");
+        pp6.setValue("20170513");
+        demo.parameters.add(pp6);
+
+        ParameterProvider pp5 = new Parameter();
+        pp5.setName("INSP_DATE2");
+        pp5.setValue("");
+        demo.parameters.add(pp5);
+
+
+
+        int count = demo.getColumnCount();
+        for (int i=0;i<count;i++){
+            System.out.println(demo.getColumnName(i));
+        }
+        int rowCount = demo.getRowCount();
+        for (int j=0;j<rowCount;j++){
+            Object obj = demo.valueList.get(j);
+            for (int k=0;k<count;k++){
+                Object obj2 = demo.getValueAt(j,k);
+                System.out.println(obj2.toString());;
+            }
+        }
+        //okRequest("xx");
     }
 
 
